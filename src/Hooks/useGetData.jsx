@@ -8,7 +8,7 @@ export default function useGetData() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
+  // handle delete customer, then update state with new data
   const handleDeleteCustomer = async (selectedId) => {
     setAppData({
       ...appData,
@@ -18,22 +18,22 @@ export default function useGetData() {
 
   const { packages, customers } = appData;
 
+  // handle Reorder Packages, then update state with new data
   const handleOrder = (selectedId, order) => {
+    // get packages by id, then check if first or last
     const index = packages.findIndex(({ id }) => id === selectedId);
     if (order === 'up' && index === 0) return;
     if (order === 'down' && index === packages.length - 1) return;
 
-    // swap packages by destructuring
+    // swap packages by destructuring,if up then swap with previous, if down then swap with next
     const [packageA, packageB] = [packages[index], packages[index + (order === 'up' ? -1 : 1)]];
-    const newPackages = [...packages];
-    newPackages[index] = packageB;
-    newPackages[index + (order === 'up' ? -1 : 1)] = packageA;
+    packages[index] = packageB;
+    packages[index + (order === 'up' ? -1 : 1)] = packageA;
     setAppData({
       ...appData,
-      packages: newPackages,
+      packages: packages,
     });
   };
-
 
   // handle Delete Package
   const handleDeletePackage = async (selectedId) => {
@@ -46,6 +46,7 @@ export default function useGetData() {
 
   // get data from API and set it to state,
   useEffect(() => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
     const abortController = new AbortController();
     setIsLoading(true);
     (async () => {
