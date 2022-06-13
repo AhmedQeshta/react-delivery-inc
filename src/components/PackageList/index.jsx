@@ -11,7 +11,7 @@ export default function PackageList({ packages, customers, handleDeletePackage, 
   if (packages?.length === 0) {
     return (
       <TableRow>
-        <TableCell colSpan={4}>No packages found</TableCell>
+        <TableCell colSpan={5}>No packages found</TableCell>
       </TableRow>
     );
   }
