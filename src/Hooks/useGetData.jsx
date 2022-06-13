@@ -8,15 +8,26 @@ export default function useGetData() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const { packages, customers } = appData;
+
   // handle delete customer, then update state with new data
   const handleDeleteCustomer = async (selectedId) => {
+    // update packages with new customerid null
+    const newPackages = packages.map((packages) => {
+      if (packages.customerid === selectedId) {
+        return { ...packages, customerid: null };
+      }
+      return packages;
+    });
+
+    // get package with customer id not null
+    const filteredPackages = newPackages.filter(({ customerid }) => customerid !== null);
+
     setAppData({
-      ...appData,
+      packages: filteredPackages,
       customers: appData.customers.filter(({ id }) => id !== selectedId),
     });
   };
-
-  const { packages, customers } = appData;
 
   // handle Reorder Packages, then update state with new data
   const handleOrder = (selectedId, order) => {
